@@ -1,0 +1,37 @@
+# Dependency directories
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build directories
+dist/
+build/
+.next/
+.nest/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Debug files
+debug
+*.pid
+
+# Coverage
+coverage/
+.nyc_output/
+
+# System files
+Thumbs.db
