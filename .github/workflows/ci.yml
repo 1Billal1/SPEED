@@ -29,8 +29,13 @@ jobs:
       working-directory: ./backend
       run: |
         if [ ! -f package-lock.json ]; then
-          echo "package-lock.json not found! Generating..."
-          npm install
+          if [ -f package.json ]; then
+            echo "package-lock.json not found! Generating from package.json..."
+            npm install
+          else
+            echo "Neither package-lock.json nor package.json found. Skipping..."
+            exit 1
+          fi
         fi
 
     - name: Setup Node.js
@@ -63,8 +68,13 @@ jobs:
       working-directory: ./frontend
       run: |
         if [ ! -f package-lock.json ]; then
-          echo "package-lock.json not found! Generating..."
-          npm install
+          if [ -f package.json ]; then
+            echo "package-lock.json not found! Generating from package.json..."
+            npm install
+          else
+            echo "Neither package-lock.json nor package.json found. Skipping..."
+            exit 1
+          fi
         fi
     
     - name: Setup Node.js
