@@ -24,26 +24,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'  # Only if using submodules
 
-    - name: Verify package-lock.json exists
-      working-directory: ./backend
+    - name: Verify backend files
       run: |
-        if [ ! -f package-lock.json ]; then
-          if [ -f package.json ]; then
-            echo "package-lock.json not found! Generating from package.json..."
-            npm install
-          else
-            echo "Neither package-lock.json nor package.json found. Skipping..."
-            exit 1
-          fi
-        fi
+        ls -la backend/package.json
+        ls -la backend/package-lock.json
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: 'backend/package-lock.json'
+        cache: false  # Disable automatic caching
+
+    - name: Manual Cache Backend
+      uses: actions/cache@v3
+      with:
+        path: |
+          backend/node_modules
+          ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
 
     - name: Install Backend Dependencies
       working-directory: ./backend
@@ -55,14 +56,36 @@ jobs:
       env:
         DATABASE_URL: ${{ env.MONGO_URI }}
         NODE_ENV: test
+
+  frontend:
+    name: Next.js Frontend
+    needs: backend
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'  # Only if using submodules
+
+    - name: Verify frontend files
+      run: |
+        ls -la frontend/package.json
+        ls -la frontend/package-lock.json
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: 'frontend/package-lock.json'
+        cache: false  # Disable automatic caching
 
+    - name: Manual Cache Frontend
+      uses: actions/cache@v3
+      with:
+        path: |
+          frontend/node_modules
+          ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+    
     - name: Install dependencies
       working-directory: ./frontend
       run: npm ci
