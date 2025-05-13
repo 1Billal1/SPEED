@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: 23.x  
+  NODE_VERSION: 20.x  
   MONGO_URI: mongodb://localhost:27017/mnnn-test
 
 jobs:
@@ -67,3 +67,5 @@ jobs:
       env:
         NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
       run: npm run build
+      
+      
