@@ -55,27 +55,6 @@ jobs:
       env:
         DATABASE_URL: ${{ env.MONGO_URI }}
         NODE_ENV: test
-
-  frontend:
-    name: Next.js Frontend
-    needs: backend
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Verify package-lock.json exists
-      working-directory: ./frontend
-      run: |
-        if [ ! -f package-lock.json ]; then
-          if [ -f package.json ]; then
-            echo "package-lock.json not found! Generating from package.json..."
-            npm install
-          else
-            echo "Neither package-lock.json nor package.json found. Skipping..."
-            exit 0
-          fi
-        fi
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
