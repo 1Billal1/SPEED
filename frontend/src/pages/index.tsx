@@ -1,115 +1,101 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { useState } from 'react';
+import axios from 'axios';
+import styles from '../styles/home.module.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+interface Article {
+  title: string;
+  authors: string[];
+  journal: string;
+  year: number;
+  doi: string;
+}
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export default function HomePage() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-export default function Home() {
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      console.warn('Search query is empty.');
+      return;
+    }
+  
+    setLoading(true);
+    setError('');
+    setResults([]); // Clear old results
+    console.log('Sending search request for query:', query);
+  
+    try {
+      const res = await axios.get(`http://localhost:3001/api/submissions/search?query=${encodeURIComponent(query)}`);
+  
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+  
+      if (!Array.isArray(res.data)) {
+        throw new Error('Expected an array of results but got: ' + JSON.stringify(res.data));
+      }
+  
+      setResults(res.data || []);
+    } catch (err: any) {
+      console.error('Search error:', err);
+  
+      if (err.response) {
+        setError(`Server Error: ${err.response.status} - ${err.response.data?.message || 'Unknown error'}`);
+      } else if (err.request) {
+        setError('No response from server. Is the backend running?');
+      } else {
+        setError('Search failed. ' + err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  
+  
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div className={styles.container}>
+      <h1 className={styles.title}>Search Articles</h1>
+
+      <div className={styles.searchBox}>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Enter title, author, journal..."
+          className={styles.input}
         />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <button onClick={handleSearch} className={styles.button}>
+          Search
+        </button>
+      </div>
+
+      {loading && <p>Loading...</p>}
+      {error && <p className={styles.error}>{error}</p>}
+
+      <div className={styles.results}>
+        {results.length > 0 ? (
+          results.map((article, index) => (
+            <div key={index} className={styles.card}>
+              <h2 className={styles.articleTitle}>{article.title}</h2>
+              <p><strong>Authors:</strong> {article.authors.join(', ')}</p>
+              <p><strong>Journal:</strong> {article.journal}</p>
+              <p><strong>Year:</strong> {article.year}</p>
+              <p>
+                <strong>DOI:</strong>{' '}
+                <a href={`https://doi.org/${article.doi}`} target="_blank" rel="noopener noreferrer">
+                  {article.doi}
+                </a>
+              </p>
+            </div>
+          ))
+        ) : (
+          !loading && <p>No results found.</p>
+        )}
+      </div>
     </div>
   );
 }
