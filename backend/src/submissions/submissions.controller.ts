@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Patch, Param } from '@nestjs/common';
 import { SubmissionsService } from './submissions.service';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 
@@ -20,4 +20,15 @@ export class SubmissionsController {
   async searchSubmissions(@Query('query') query: string): Promise<any[]> {
     return this.submissionsService.search(query);
   }
+
+  @Get('my-pending')
+  async getMyPending(@Query('submitterId') submitterId: string) {
+    return this.submissionsService.getPendingBySubmitter(submitterId);
+  }
+
+  @Patch(':id')
+  async editSubmission(@Param('id') id: string, @Body() updateDto: any) {
+    return this.submissionsService.editSubmission(id, updateDto);
+  }
+
 }

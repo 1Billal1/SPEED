@@ -1,7 +1,6 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-// Import correctly
 const bibtexParse = require('bibtex-parse-js');
 
 import { Submission } from './schemas/submission.schema';
@@ -64,4 +63,25 @@ export class SubmissionsService {
       ].filter(Boolean),
     }).exec();
   }
+
+  async getPendingBySubmitter(submitterId: string) {
+    return this.submissionModel.find({ submitterId, status: 'pending' });
+  }
+
+  async editSubmission(id: string, updateDto: any) {
+    const submission = await this.submissionModel.findById(id);
+  
+    if (!submission) throw new NotFoundException('Submission not found');
+    if (submission.status !== 'pending') throw new ForbiddenException('Cannot edit after moderation begins');
+  
+    submission.editHistory.push({
+      editedAt: new Date(),
+      previous: { ...submission.toObject() }
+    });
+  
+    Object.assign(submission, updateDto);
+    return submission.save();
+  }
+  
+  
 }

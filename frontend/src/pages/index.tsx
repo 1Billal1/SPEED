@@ -24,7 +24,7 @@ export default function HomePage() {
   
     setLoading(true);
     setError('');
-    setResults([]); // Clear old results
+    setResults([]);
     console.log('Sending search request for query:', query);
   
     try {
@@ -52,9 +52,6 @@ export default function HomePage() {
       setLoading(false);
     }
   };
-  
-  
-  
 
   return (
     <div className={styles.container}>

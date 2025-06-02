@@ -1,50 +1,51 @@
 import Link from 'next/link';
-import { useEffect, useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { useAuth } from '../pages/auth/context/AuthContext';
+import styles from './Layout.module.css';
 
 type Props = {
   children: ReactNode;
 };
 
 export default function Layout({ children }: Props) {
-  const [userRole, setUserRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const role = localStorage.getItem('role');
-    setUserRole(role);
-  }, []);
+  const { userRole, logout, isLoading } 
+    = useAuth();
 
   return (
-    <div className="layout">
-      <nav className="navbar">
-        <div className="nav-container">
-          <span className="logo">SPEED</span>
-          <ul className="nav-links">
+    <div className={styles.layoutWrapper}>
+      <nav className={styles.navbar}>
+        <div className={styles.navbarContainer}>
+          <Link href="/" className={styles.navbarLogo}>
+            SPEED
+          </Link>
+          
+          <ul className={styles.navbarLinks}>
             <li><Link href="/">Home</Link></li>
-            <li><Link href="/submit">Submit</Link></li>
 
-            {!userRole && (
+            {userRole === 'submitter' && (
+              <li><Link href="/submit">Submit Article</Link></li>
+            )}
+
+            {!userRole && !isLoading && (
               <>
-                <li><Link href="/signup">Sign Up</Link></li>
-                <li><Link href="/login">Log In</Link></li>
+                <li><Link href="/auth/signup">Sign Up</Link></li>
+                <li><Link href="/auth/login">Log In</Link></li>
               </>
             )}
 
             {userRole === 'submitter' && (
-              <li><Link href="/submit">Submitter Dashboard</Link></li>
+              <li><Link href="/submit/dashboard">My Submissions</Link></li>
             )}
             {userRole === 'moderator' && (
-              <li><Link href="/moderator/dashboard">Moderator Dashboard</Link></li>
+              <li><Link href="/moderator/dashboard">Moderation</Link></li>
             )}
             {userRole === 'analyst' && (
-              <li><Link href="/analyst/tools">Analyst Tools</Link></li>
+              <li><Link href="/analyst/dashboard">Analysis</Link></li>
             )}
 
             {userRole && (
               <li>
-                <button className="logout-btn" onClick={() => {
-                  localStorage.removeItem('role');
-                  window.location.reload();
-                }}>
+                <button className={styles.logoutBtn} onClick={logout}>
                   Log Out
                 </button>
               </li>
@@ -53,9 +54,7 @@ export default function Layout({ children }: Props) {
         </div>
       </nav>
 
-      <main className="main-content">
-        {children}
-      </main>
+      <main className={styles.mainContent}>{children}</main>
     </div>
   );
 }

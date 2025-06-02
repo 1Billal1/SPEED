@@ -1,0 +1,114 @@
+/* src/components/Layout.module.css */
+
+.layoutWrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: inherit; /* Explicitly inherit font from body/global styles */
+  }
+  
+  .navbar {
+    background-color: #222;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    font-family: inherit; /* Ensure navbar text also inherits */
+  }
+  
+  .navbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .navbarLogo {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+    /* font-family will be inherited */
+  }
+  
+  .navbarLogo:hover {
+    color: #bbb;
+  }
+  
+  .navbarLinks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    /* font-family will be inherited */
+  }
+  
+  .navbarLinks a,
+  .logoutBtn {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem; /* Setting font-size is fine */
+    padding: 0.3rem 0;
+    transition: color 0.2s ease-in-out;
+    font-family: inherit; /* Explicitly ensure links and buttons inherit */
+  }
+  
+  .navbarLinks a:hover {
+    color: #90cdf4;
+  }
+  
+  .logoutBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* font-family: inherit; is already covered by the rule above */
+  }
+  
+  .logoutBtn:hover {
+    color: #f56565;
+  }
+  
+  .mainContent {
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 1.5rem auto;
+    font-family: inherit; /* Ensure main content inherits */
+  }
+  
+  /* Responsive behavior */
+  @media (max-width: 768px) {
+    .navbarContainer {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 1rem;
+    }
+  
+    .navbarLogo {
+      margin-bottom: 1rem;
+    }
+  
+    .navbarLinks {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 0.75rem;
+    }
+  
+     .navbarLinks li {
+       width: 100%;
+     }
+  
+     .navbarLinks a,
+     .logoutBtn {
+      display: block;
+      padding: 0.75rem 0;
+      text-align: left;
+     }
+  }
