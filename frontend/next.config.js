@@ -10,6 +10,7 @@ const nextConfig = {
     },
   };
 
+
   module.exports = {
     async redirects() {
       return [
@@ -26,7 +27,6 @@ const nextConfig = {
       ];
     },
   };
-  
   
   module.exports = nextConfig;
   

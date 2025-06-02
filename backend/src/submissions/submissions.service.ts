@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-// Import correctly
 const bibtexParse = require('bibtex-parse-js');
 
 import { Submission } from './schemas/submission.schema';
