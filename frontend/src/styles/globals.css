@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 @import "tailwindcss";
 
 :root {
@@ -24,3 +25,37 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+=======
+/* styles/globals.css */
+html {
+  box-sizing: border-box; /* Better box model */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Modern system font stack */
+  line-height: 1.6;
+  background-color: #f9f9f9; /* Light page background */
+  color: #333; /* Default text color */
+  -webkit-font-smoothing: antialiased; /* Better font rendering on WebKit */
+  -moz-osx-font-smoothing: grayscale; /* Better font rendering on Firefox */
+}
+
+/* You might have other global styles here, like for links, headings, etc. */
+a {
+  color: #0070f3; /* Example global link color */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+>>>>>>> Stashed changes

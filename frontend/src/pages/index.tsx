@@ -6,10 +6,55 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+<<<<<<< Updated upstream
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+=======
+export default function HomePage() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      console.warn('Search query is empty.');
+      return;
+    }
+  
+    setLoading(true);
+    setError('');
+    setResults([]);
+    console.log('Sending search request for query:', query);
+  
+    try {
+      const res = await axios.get(`http://localhost:3001/api/submissions/search?query=${encodeURIComponent(query)}`);
+  
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+  
+      if (!Array.isArray(res.data)) {
+        throw new Error('Expected an array of results but got: ' + JSON.stringify(res.data));
+      }
+  
+      setResults(res.data || []);
+    } catch (err: any) {
+      console.error('Search error:', err);
+  
+      if (err.response) {
+        setError(`Server Error: ${err.response.status} - ${err.response.data?.message || 'Unknown error'}`);
+      } else if (err.request) {
+        setError('No response from server. Is the backend running?');
+      } else {
+        setError('Search failed. ' + err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+>>>>>>> Stashed changes
 
 export default function Home() {
   return (
