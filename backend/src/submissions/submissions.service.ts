@@ -51,4 +51,17 @@ export class SubmissionsService {
     });
     return submission.save();
   }
+
+  async search(query: string): Promise<Submission[]> {
+    const regex = new RegExp(query, 'i');
+    return this.submissionModel.find({
+      $or: [
+        { title: regex },
+        { authors: regex },
+        { journal: regex },
+        { doi: regex },
+        { year: isNaN(+query) ? undefined : +query },
+      ].filter(Boolean),
+    }).exec();
+  }
 }
