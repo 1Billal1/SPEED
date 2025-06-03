@@ -1,15 +1,6 @@
 // next.config.js
-const nextConfig = {
-    async rewrites() {
-      return [
-        {
-          source: '/api/:path*',
-          destination: 'http://localhost:3001/:path*', // Proxy to NestJS backend
-        },
-      ];
-    },
-  };
 
+<<<<<<< Updated upstream
 
   module.exports = {
     async redirects() {
@@ -30,3 +21,26 @@ const nextConfig = {
   
   module.exports = nextConfig;
   
+=======
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  
+  async redirects() {
+    return [
+      {
+        source: '/login',
+        destination: '/auth/login',
+        permanent: true,
+      },
+      {
+        source: '/signup',
+        destination: '/auth/signup',
+        permanent: true,
+      },
+    ];
+  },
+};
+
+module.exports = nextConfig;
+>>>>>>> Stashed changes
