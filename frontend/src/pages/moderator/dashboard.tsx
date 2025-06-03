@@ -3,9 +3,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import axios, { AxiosError } from 'axios';
 import { useAuth } from '../auth/context/AuthContext';
-import styles from './ModeratorDashboard.module.css';
+import styles from './dashboard.module.css';
 
-// --- Types ---
 interface FrontendSubmission {
   _id: string;
   title?: string;
@@ -76,10 +75,11 @@ const ModeratorDashboard = () => {
     try {
       const response = await axios.get<PaginatedSubmissionsResponse>(endpoint, { params });
       if (response.data && Array.isArray(response.data.submissions)) {
-        setListedSubmissions(response.data.submissions);
-        setTotalPages(response.data.totalPages);
-        setTotalItems(response.data.total);
-        setCurrentPage(response.data.currentPage);
+        const paginatedData = response.data; 
+        setListedSubmissions(paginatedData.submissions);
+        setTotalPages(paginatedData.totalPages);
+        setTotalItems(paginatedData.total);
+        setCurrentPage(paginatedData.currentPage);
       } else {
         console.error("[FE Dashboard] Unexpected data structure from list API:", response.data);
         setListError("Received invalid data structure from server.");
@@ -108,7 +108,7 @@ const ModeratorDashboard = () => {
     setSelectedSubmissionId(submissionId);
     setSubmissionDetails(null); setIsLoadingDetails(true); setDetailsError(null); 
     try {
-      const response = await axios.get<SubmissionDetailsForModeration>(`/api/submissions/${submissionId}/details-for-moderation`); 
+      const response = await axios.get<SubmissionDetailsForModeration>(`/api/submissions/${submissionId}/details-for-moderation`);
       if (response.data && response.data.submission && Array.isArray(response.data.potentialDuplicates)) {
         setSubmissionDetails(response.data);
       } else {
@@ -247,7 +247,22 @@ const ModeratorDashboard = () => {
                             {typeof dup.similarityScore === 'number' && <em style={{marginLeft: '10px'}}>(Similarity: {(dup.similarityScore * 100).toFixed(0)}%)</em>}
                           </p>
                           {dup.doi && <p className={styles.detailText}><strong>DOI:</strong> <a href={`https://doi.org/${dup.doi}`} target="_blank" rel="noopener noreferrer" className={styles.doiLink}>{dup.doi}</a></p>}
-                          <button onClick={() => handleModerateAction( submissionDetails.submission._id, MODERATION_STATUS.REJECTED, `Duplicate of: "${dup.title?.substring(0,30)}..." (ID: ${dup._id})`, dup._id )} className={`${styles.actionButton} ${styles.confirmDuplicateButton}`}>Confirm as Duplicate</button>
+                          <button 
+                            onClick={() => {
+                              const dupTitleSnippet = dup.title?.substring(0,30) || "Untitled";
+                              // Using single quotes inside the template literal for the reason string
+                              const reasonForConfirmingDuplicate = `Duplicate of: '${dupTitleSnippet}...' (ID: ${dup._id})`;
+                              handleModerateAction( 
+                                submissionDetails.submission._id, 
+                                MODERATION_STATUS.REJECTED, 
+                                reasonForConfirmingDuplicate, 
+                                dup._id 
+                              );
+                            }} 
+                            className={`${styles.actionButton} ${styles.confirmDuplicateButton}`}
+                          >
+                            Confirm as Duplicate
+                          </button>
                         </div>
                       ))}
                     </div>

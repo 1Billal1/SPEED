@@ -1,3 +1,4 @@
+// frontend/src/pages/api/submissions.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios, { AxiosError } from 'axios';
 
@@ -9,21 +10,21 @@ interface CreateSubmissionPayload {
   doi: string;
 }
 
-interface SubmissionCreationResponse {
+interface SubmissionResponse {
   _id: string;
   title: string;
-  status: string;
+  status: string; 
   createdAt: string;
 }
 
-interface ErrorResponse {
+interface ApiErrorResponse {
   message: string;
-  error?: string | object;
+  error?: string | object | undefined;
 }
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SubmissionCreationResponse | ErrorResponse>
+  req: NextApiRequest, 
+  res: NextApiResponse<SubmissionResponse | ApiErrorResponse> 
 ) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
@@ -34,30 +35,33 @@ export default async function handler(
     const submissionData = req.body as CreateSubmissionPayload;
     const nestJsBackendUrl = process.env.NEXT_PUBLIC_NESTJS_BACKEND_URL || 'http://localhost:3001';
     
-    const response = await axios.post<SubmissionCreationResponse>(
-      `${nestJsBackendUrl}/api/submissions`,
+    const response = await axios.post<SubmissionResponse>(
+      `${nestJsBackendUrl}/api/submissions`, 
       submissionData
     );
-    
     return res.status(response.status).json(response.data);
 
-  } catch (error) {
+  } catch (error: unknown) {
     let statusCode = 500;
-    let errorData: ErrorResponse = {
-      message: 'Submission to backend failed.',
-    };
+    let responseMessage = 'Submission to backend failed.';
+    let errorDetails: string | object | undefined;
 
     if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError<ErrorResponse>;
-      statusCode = serverError.response?.status || 500;
-      errorData.message = serverError.response?.data?.message || serverError.message || 'Submission to backend failed.';
-      errorData.error = serverError.response?.data?.error || serverError.response?.data;
+      statusCode = error.response?.status || 500;
+      const responseData = error.response?.data as ApiErrorResponse | undefined;
+      responseMessage = responseData?.message || error.message || responseMessage;
+      errorDetails = responseData?.error || responseData; 
     } else if (error instanceof Error) {
-      errorData.message = error.message;
+      responseMessage = error.message;
     } else {
-      errorData.message = 'An unexpected error occurred while processing the submission.';
+      responseMessage = 'An unexpected error occurred while processing the submission.';
     }
-
-    return res.status(statusCode).json(errorData);
+    console.error('Backend submission proxy error:', responseMessage, error);
+    
+    const errorResponsePayload: ApiErrorResponse = { message: responseMessage };
+    if (errorDetails !== undefined) {
+        errorResponsePayload.error = errorDetails;
+    }
+    return res.status(statusCode).json(errorResponsePayload);
   }
 }
