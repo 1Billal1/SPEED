@@ -231,44 +231,51 @@ const ModeratorDashboard = () => {
             <p className={`${styles.detailText} ${styles.rejectionReasonText}`}><strong>Rejection Reason:</strong> {submission.rejectionReason}</p>
           )}
 
-          {selectedSubmissionId === submission._id ? (
-            <div className={styles.moderationSection}>
-              <h4>Actions for: "{submissionDetails?.submission?.title || submission.title}"</h4>
-              {isLoadingDetails && <p className={styles.loadingText}>Loading details & checking for duplicates...</p>}
-              {detailsError && <p className={styles.errorText}>{detailsError}</p>}
-              {submissionDetails && !isLoadingDetails && !detailsError && (
-                <>
-                  {submissionDetails.potentialDuplicates?.length > 0 && (
-                    <div className={styles.duplicatesContainer}>
-                      <h4>Potential Duplicates Found:</h4>
-                      {submissionDetails.potentialDuplicates.map((dup, index) => (
-                        <div key={dup._id} className={`${styles.duplicateItem} ${index === submissionDetails.potentialDuplicates.length - 1 ? styles.duplicateItemLast : ''}`}>
-                          <p className={styles.detailText}><strong>Title:</strong> {dup.title || 'N/A'} (<span className={getStatusClassName(dup.status)}>{dup.status}</span>)
-                            {typeof dup.similarityScore === 'number' && <em style={{marginLeft: '10px'}}>(Similarity: {(dup.similarityScore * 100).toFixed(0)}%)</em>}
-                          </p>
-                          {dup.doi && <p className={styles.detailText}><strong>DOI:</strong> <a href={`https://doi.org/${dup.doi}`} target="_blank" rel="noopener noreferrer" className={styles.doiLink}>{dup.doi}</a></p>}
-                          <button 
-                            onClick={() => {
-                              const dupTitleSnippet = dup.title?.substring(0,30) || "Untitled";
-                              // Using single quotes inside the template literal for the reason string
-                              const reasonForConfirmingDuplicate = `Duplicate of: '${dupTitleSnippet}...' (ID: ${dup._id})`;
+      {selectedSubmissionId === submission._id ? (
+        <div className={styles.moderationSection}>
+          <h4>Actions for: "{submissionDetails?.submission?.title || submission.title}"</h4>
+          {isLoadingDetails && <p className={styles.loadingText}>Loading details & checking for duplicates...</p>}
+          {detailsError && <p className={styles.errorText}>{detailsError}</p>}
+          {submissionDetails && !isLoadingDetails && !detailsError && (
+            <>
+              {submissionDetails.potentialDuplicates?.length > 0 && (
+                <div className={styles.duplicatesContainer}>
+                  <h4>Potential Duplicates Found:</h4>
+                  {submissionDetails.potentialDuplicates.map((dup, index) => {
+                    const dupTitleSnippet = dup.title?.substring(0,30) || "Untitled";
+                    const reasonForConfirmingDuplicate = `Duplicate of: '${dupTitleSnippet}...' (ID: ${dup._id})`;
+                    
+                    return (
+                      <div key={dup._id} className={`${styles.duplicateItem} ${index === submissionDetails.potentialDuplicates.length - 1 ? styles.duplicateItemLast : ''}`}>
+                        <p className={styles.detailText}><strong>Title:</strong> {dup.title || 'N/A'} (<span className={getStatusClassName(dup.status)}>{dup.status}</span>)
+                          {typeof dup.similarityScore === 'number' && <em style={{marginLeft: '10px'}}>(Similarity: {(dup.similarityScore * 100).toFixed(0)}%)</em>}
+                        </p>
+                        {dup.doi && <p className={styles.detailText}><strong>DOI:</strong> <a href={`https://doi.org/${dup.doi}`} target="_blank" rel="noopener noreferrer" className={styles.doiLink}>{dup.doi}</a></p>}
+                        <button 
+                          onClick={() => {
+                            if (submissionDetails && submissionDetails.submission) {
                               handleModerateAction( 
                                 submissionDetails.submission._id, 
                                 MODERATION_STATUS.REJECTED, 
                                 reasonForConfirmingDuplicate, 
                                 dup._id 
                               );
-                            }} 
-                            className={`${styles.actionButton} ${styles.confirmDuplicateButton}`}
-                          >
-                            Confirm as Duplicate
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {submissionDetails.submission.status.toLowerCase() === 'pending' && (
-                    <>
+                            } else {
+                              console.error("Error: submissionDetails.submission is not available for moderation action.");
+                              setDetailsError("Cannot perform moderation: essential submission data is missing.");
+                            }
+                          }} 
+                          className={`${styles.actionButton} ${styles.confirmDuplicateButton}`}
+                        >
+                          Confirm as Duplicate
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {submissionDetails.submission && submissionDetails.submission.status.toLowerCase() === 'pending' && (
+                <>
                       <div style={{ marginTop: '25px' }}>
                         <button onClick={() => handleModerateAction(submission._id, MODERATION_STATUS.ACCEPTED)} className={`${styles.actionButton} ${styles.acceptButton}`}>Accept Submission</button>
                       </div>
