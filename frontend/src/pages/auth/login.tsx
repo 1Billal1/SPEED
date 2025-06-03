@@ -51,7 +51,7 @@ export default function Login() {
         <input type="email" placeholder="Email" className={styles.input} value={email} onChange={e => setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" className={styles.input} value={password} onChange={e => setPassword(e.target.value)} required />
         <p className={styles.signupText}>
-          Don't have an account?{' '} 
+          Don&apos;t have an account?{' '} 
           <Link href="/auth/signup" className={styles.signupLink}>Sign up</Link>
         </p>
         <button type="submit" className={styles.button}>Login</button>

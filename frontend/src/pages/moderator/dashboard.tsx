@@ -233,7 +233,7 @@ const ModeratorDashboard = () => {
 
       {selectedSubmissionId === submission._id ? (
         <div className={styles.moderationSection}>
-          <h4>Actions for: "{submissionDetails?.submission?.title || submission.title}"</h4>
+          <h4>Actions for: {submissionDetails?.submission?.title || submission.title}</h4>
           {isLoadingDetails && <p className={styles.loadingText}>Loading details & checking for duplicates...</p>}
           {detailsError && <p className={styles.errorText}>{detailsError}</p>}
           {submissionDetails && !isLoadingDetails && !detailsError && (
