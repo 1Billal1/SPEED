@@ -5,7 +5,7 @@ import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './auth.module.css'; 
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface LoginResponse { email: string; role: string; }
 interface ApiErrorResponse { message: string; details?: unknown; }

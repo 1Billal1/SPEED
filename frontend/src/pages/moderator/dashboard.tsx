@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import axios, { AxiosError } from 'axios';
-import { useAuth } from '../auth/context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from './dashboard.module.css';
 
 interface FrontendSubmission {
