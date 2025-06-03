@@ -1,0 +1,194 @@
+.dashboardContainer {
+    max-width: 950px;
+    margin: 25px auto;
+    padding: 20px 30px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+.pageTitle {
+    font-size: 2.2em;
+    color: #212529;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 15px;
+    margin-bottom: 35px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.tabsContainer {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tabButton {
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+    text-transform: capitalize;
+    background-color: #e9ecef;
+    color: #495057;
+}
+.tabButton:hover {
+    opacity: 0.8;
+}
+.tabButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.activeTab {
+    color: #fff !important;
+    border-bottom: 3px solid;
+}
+.pendingActive { background-color: #007bff !important; border-color: #0056b3 !important; }
+.acceptedActive { background-color: #28a745 !important; border-color: #1e7e34 !important; }
+.rejectedActive { background-color: #dc3545 !important; border-color: #bd2130 !important; }
+
+.paginationContainer {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.paginationButton {
+    padding: 8px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.paginationButton:hover:not(:disabled) {
+    background-color: #e9ecef;
+}
+.paginationButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.pageInfo {
+    font-size: 0.95em;
+    color: #495057;
+}
+
+.submissionCard {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    padding: 20px 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
+    transition: box-shadow 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+.submissionCard:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.submissionTitle {
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #0056b3;
+    font-weight: 600;
+}
+
+.detailText {
+    margin: 6px 0;
+    color: #495057;
+    font-size: 0.95em;
+    line-height: 1.7;
+}
+.detailText strong {
+    color: #212529;
+    font-weight: 600;
+}
+.rejectionReasonText { 
+    font-style: italic;
+    border: 1px dashed #f5c6cb; 
+    padding: 8px 10px;
+    border-radius: 4px;
+    background-color: #f8d7da; 
+    color: #721c24;
+    margin-top: 8px;
+}
+
+.doiLink {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 500;
+    word-break: break-all;
+}
+.doiLink:hover { text-decoration: underline; color: #003875; }
+
+.statusText {
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+}
+.statusPending { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+.statusAccepted { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+.statusRejected { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+
+.actionButton {
+    padding: 10px 20px;
+    margin-right: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.actionButton:hover { opacity: 0.85; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transform: translateY(-1px); }
+.actionButton:active { transform: translateY(0px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+.actionButton:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; transform: none; }
+
+.moderateButton { background-color: #007bff; color: white; }
+.moderateButton:hover { background-color: #0056b3; }
+.acceptButton { background-color: #28a745; color: white; }
+.acceptButton:hover { background-color: #1e7e34; }
+.rejectButton { background-color: #dc3545; color: white; margin-bottom: 8px; }
+.rejectButton:hover { background-color: #bd2130; }
+.confirmDuplicateButton { background-color: #ffc107; color: #212529; }
+.confirmDuplicateButton:hover { background-color: #e0a800; }
+.cancelButton { background-color: #6c757d; color: white; margin-top: 20px; }
+.cancelButton:hover { background-color: #545b62; }
+
+.moderationSection { margin-top: 25px; border-top: 1px solid #e9ecef; padding-top: 25px; }
+.moderationSection h4, .moderationSection h5 { color: #343a40; margin-top: 0; margin-bottom: 18px; font-weight: 600; }
+
+.duplicatesContainer { margin-top: 25px; border: 1px solid #fd7e14; border-radius: 6px; padding: 20px; background-color: #fff8f0; }
+.duplicatesContainer h4 { margin-top: 0; color: #d9534f; font-size: 1.1em; display: flex; align-items: center; }
+.duplicatesContainer h4::before { content: '⚠️'; margin-right: 8px; font-size: 1.2em; }
+.duplicateItem { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #ffddb0; }
+.duplicateItem:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+.inputField { margin-right: 10px; margin-bottom: 10px; padding: 12px 15px; border-radius: 4px; border: 1px solid #ced4da; width: calc(100% - 170px); min-width: 200px; font-size: 0.95em; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.inputField:focus { border-color: #80bdff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); }
+.rejectCustomButtonContainer { display: flex; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+
+.loadingText, .noSubmissionsText { text-align: center; font-size: 1.1em; color: #6c757d; padding: 50px 20px; font-style: italic; }
+.errorText { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px 20px; border-radius: 5px; text-align: left; margin-bottom: 20px; font-size: 0.95em; }

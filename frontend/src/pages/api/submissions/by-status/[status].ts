@@ -1,16 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
-import type { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const NESTJS_BACKEND_URL = process.env.NEXT_PUBLIC_NESTJS_BACKEND_URL || 'http://localhost:3001';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query as { id: string };
+  const { status, page, limit } = req.query as { 
+    status: string; 
+    page?: string;
+    limit?: string; 
+  };
 
-  if (req.method === 'PATCH') {
+  if (req.method === 'GET') {
     try {
-      const nestJsUrl = `${NESTJS_BACKEND_URL}/api/submissions/${id}/moderate`;
-      const backendResponse = await axios.patch(nestJsUrl, req.body);
+      const nestJsUrl = `${NESTJS_BACKEND_URL}/api/submissions/by-status/${status}`;
+      const backendResponse = await axios.get(nestJsUrl, {
+        params: { page, limit },
+      });
       res.status(backendResponse.status).json(backendResponse.data);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -18,20 +23,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (axiosError.response) {
           res
             .status(axiosError.response.status)
-            .json(axiosError.response.data || { message: 'Error from backend during moderation' });
+            .json(axiosError.response.data || { message: `Error from backend fetching status ${status}` });
         } else {
           res
             .status(500)
-            .json({ message: 'No response received from backend during moderation' });
+            .json({ message: `No response from backend for status ${status}` });
         }
       } else if (error instanceof Error) {
         res.status(500).json({ message: error.message });
       } else {
-        res.status(500).json({ message: 'Unknown error occurred during moderation' });
+        res.status(500).json({ message: `Unknown error while fetching submissions with status ${status}` });
       }
     }
   } else {
-    res.setHeader('Allow', ['PATCH']);
+    res.setHeader('Allow', ['GET']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

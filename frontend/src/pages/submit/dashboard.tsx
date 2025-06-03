@@ -1,4 +1,3 @@
-// pages/dashboard.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -19,7 +18,7 @@ export default function SubmitterDashboard() {
   }, [router]);
 
   if (loading || role !== 'submitter') {
-    return null; // Avoid flashing the page before redirect
+    return null;
   }
 
   return (

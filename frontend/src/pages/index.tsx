@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import styles from '../styles/home.module.css';
 
 interface Article {
@@ -28,7 +28,7 @@ export default function HomePage() {
     console.log('Sending search request for query:', query);
   
     try {
-      const res = await axios.get(`http://localhost:3001/api/submissions/search?query=${encodeURIComponent(query)}`);
+      const res = await axios.get<Article[]>(`http://localhost:3001/api/submissions/search?query=${encodeURIComponent(query)}`);
   
       console.log('Response status:', res.status);
       console.log('Response data:', res.data);
@@ -38,15 +38,17 @@ export default function HomePage() {
       }
   
       setResults(res.data || []);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Search error:', err);
   
-      if (err.response) {
-        setError(`Server Error: ${err.response.status} - ${err.response.data?.message || 'Unknown error'}`);
-      } else if (err.request) {
+      const axiosErr = err as AxiosError<{ message?: string }>;
+  
+      if (axiosErr.response) {
+        setError(`Server Error: ${axiosErr.response.status} - ${axiosErr.response.data?.message || 'Unknown error'}`);
+      } else if (axiosErr.request) {
         setError('No response from server. Is the backend running?');
       } else {
-        setError('Search failed. ' + err.message);
+        setError('Search failed. ' + axiosErr.message);
       }
     } finally {
       setLoading(false);

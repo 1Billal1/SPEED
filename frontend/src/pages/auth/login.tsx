@@ -1,47 +1,58 @@
-// src/pages/auth/login.tsx
+// frontend/src/pages/auth/login.tsx
 'use client';
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, FormEvent } from 'react';
+import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
-import styles from './auth.module.css'; // Make sure path is correct
-import { useAuth } from './context/AuthContext'; // Make sure path is correct
+import Link from 'next/link';
+import styles from './auth.module.css'; 
+import { useAuth } from './context/AuthContext';
+
+interface LoginResponse {
+  email: string;
+  role: string;
+}
+
+interface ErrorResponse {
+  message: string;
+}
 
 export default function Login() {
   const router = useRouter();
-  const { login: authLogin } = useAuth();
+  const { login: authLogin } = useAuth(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError(''); 
     try {
-      const res = await axios.post('/api/login', { email, password });
+      const res = await axios.post<LoginResponse>('/api/login', { email, password }); 
       
       if (res.data && res.data.role) {
-        console.log('Login successful, role received:', res.data.role); // Debug
-        authLogin(res.data.role); // Set role in context
+        authLogin(res.data.role); 
         
-        // Role-based redirection:
         if (res.data.role === 'moderator') {
-          console.log('Redirecting to moderator dashboard'); // Debug
           router.push('/moderator/dashboard');
         } else if (res.data.role === 'analyst') {
-          console.log('Redirecting to analyst dashboard'); // Debug
-          router.push('/analyst/dashboard'); // or your analyst page path
+          router.push('/analyst/dashboard');
         } else if (res.data.role === 'submitter') {
-          console.log('Redirecting to submitter dashboard'); // Debug
           router.push('/submit/dashboard');
         } else {
-          console.log('Unknown role, redirecting to homepage'); // Debug
-          router.push('/'); // Fallback
+          router.push('/');
         }
       } else {
-        setError('Login successful, but role not provided by the server.');
+        setError('Login successful, but role not provided by server.');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } catch (err) {
+      let errorMessage = 'Login failed. Please check your credentials.';
+      if (axios.isAxiosError(err)) {
+        const serverError = err as AxiosError<ErrorResponse>;
+        errorMessage = serverError.response?.data?.message || serverError.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     }
   };
 
@@ -69,8 +80,7 @@ export default function Login() {
         
         <p className={styles.signupText}>
           Don't have an account?{' '}
-          {/* Ensure this href path is correct */}
-          <a href="/auth/signup" className={styles.signupLink}>Sign up</a> 
+          <Link href="/auth/signup" className={styles.signupLink}>Sign up</Link>
         </p>
 
         <button type="submit" className={styles.button}>Login</button>
