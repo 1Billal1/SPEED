@@ -1,36 +1,45 @@
+// frontend/src/pages/api/parse-bibtex.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+const NESTJS_BACKEND_URL = process.env.NEXT_PUBLIC_NESTJS_BACKEND_URL || 'http://localhost:3001';
 
-  const { bibtex } = req.body;
+interface BibtexParseRequest { bibtex: string; }
+interface ParsedBibtexResponse { title?: string; authors?: string[]; journal?: string; year?: number; doi?: string; }
+interface ApiErrorResponse { message: string; details?: unknown; }
 
-  if (!bibtex || typeof bibtex !== 'string') {
-    return res.status(400).json({ message: 'Invalid BibTeX content' });
-  }
-
-  try {
-    const response = await axios.post('http://localhost:3001/api/submissions/parse-bibtex', { bibtex });
-    return res.status(200).json(response.data);
-  } catch (error: unknown) {
-    let errorMessage = 'Unknown error';
-    let backendError = null;
-
-    if (axios.isAxiosError(error)) {
-      errorMessage = error.message;
-      backendError = error.response?.data || null;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ParsedBibtexResponse | ApiErrorResponse>
+) {
+  if (req.method === 'POST') {
+    const { bibtex } = req.body as BibtexParseRequest;
+    if (!bibtex) {
+      return res.status(400).json({ message: 'BibTeX content is required.' });
     }
+    try {
+      const backendResponse = await axios.post<ParsedBibtexResponse>(
+        `${NESTJS_BACKEND_URL}/api/submissions/parse-bibtex`, 
+        { bibtex }
+      );
+      return res.status(backendResponse.status).json(backendResponse.data);
+    } catch (error: unknown) {
+      let statusCode = 500;
+      let responseMessage = 'Failed to parse BibTeX via backend.';
+      let errorDetails: unknown = undefined;
 
-    console.error('BibTeX parsing error:', backendError || errorMessage);
-
-    return res.status(500).json({
-      message: 'Failed to parse BibTeX',
-      error: backendError || errorMessage,
-    });
+      if (axios.isAxiosError(error)) {
+        statusCode = error.response?.status || 500;
+        responseMessage = (error.response?.data as ApiErrorResponse)?.message || error.message || responseMessage;
+        errorDetails = error.response?.data;
+      } else if (error instanceof Error) {
+        responseMessage = error.message;
+      }
+      console.error('Parse BibTeX API proxy error:', responseMessage, error);
+      return res.status(statusCode).json({ message: responseMessage, details: errorDetails });
+    }
+  } else {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
