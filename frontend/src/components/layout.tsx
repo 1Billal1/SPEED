@@ -1,14 +1,15 @@
+// src/components/layout.tsx
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { useAuth } from '../pages/auth/context/AuthContext';
-import styles from './Layout.module.css';
+import { useAuth } from '../pages/auth/context/AuthContext'; // Ensure path is correct
+import styles from './Layout.module.css'; // Import the CSS Module
 
 type Props = {
   children: ReactNode;
 };
 
 export default function Layout({ children }: Props) {
-  const { userRole, logout, isLoading } 
+  const { userRole, logout, isLoading } // Assuming isLoading is available from useAuth
     = useAuth();
 
   return (

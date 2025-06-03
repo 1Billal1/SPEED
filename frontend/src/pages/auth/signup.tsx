@@ -1,10 +1,12 @@
-// your-nextjs-project/src/pages/auth/signup.tsx
-'use client'; // If using Next.js App Router, otherwise remove if using Pages Router primarily
-import { useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router'; // For Pages Router
-// If using App Router (Next.js 13+): import { useRouter } from 'next/navigation';
-import styles from './auth.module.css'; // Assuming this path is correct
+'use client';
+import { useState, FormEvent } from 'react';
+import axios, { AxiosError } from 'axios';
+import { useRouter } from 'next/router';
+import styles from './auth.module.css';
+
+interface ErrorResponse {
+  message: string;
+}
 
 export default function Signup() {
   const router = useRouter();
@@ -12,18 +14,23 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError(''); 
     try {
-      // Ensure this path matches your Next.js API route file
-      // The backend (NestJS auth.service.ts) will assign the 'submitter' role by default.
       await axios.post('/api/signup', { email, password });
-      
-      // Redirect to login page after successful signup
       router.push('/auth/login'); 
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Signup failed. Please try again.');
+    } catch (err) {
+      let errorMessage = 'Signup failed. Please try again.';
+      if (axios.isAxiosError(err)) {
+        const serverError = err as AxiosError<ErrorResponse>;
+        errorMessage = serverError.response?.data?.message || serverError.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = 'An unexpected error occurred during signup.';
+      }
+      setError(errorMessage);
     }
   };
 
