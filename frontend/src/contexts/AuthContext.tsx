@@ -1,10 +1,9 @@
-// src/pages/auth/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 
 type AuthContextType = {
   userRole: string | null;
-  isLoading: boolean; // <--- New loading state
+  isLoading: boolean; 
   login: (role: string) => void;
   logout: () => void;
 };
@@ -13,11 +12,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [userRole, setUserRole] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // <--- Initialize to true
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
     try {
       const savedRole = localStorage.getItem('role');
       if (savedRole) {
@@ -29,14 +28,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Error accessing localStorage:", error);
       setUserRole(null);
     } finally {
-      setIsLoading(false); // Finish loading
+      setIsLoading(false);
     }
   }, []);
 
   const login = (role: string) => {
     localStorage.setItem('role', role);
     setUserRole(role);
-    // router.push relevant dashboard or homepage
   };
 
   const logout = () => {
@@ -46,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ userRole, isLoading, login, logout }}> {/* Add isLoading */}
+    <AuthContext.Provider value={{ userRole, isLoading, login, logout }}> 
       {children}
     </AuthContext.Provider>
   );

@@ -1,7 +1,7 @@
 // src/pages/analyst/dashboard.tsx (or tools.tsx, adjust filename as needed)
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../auth/context/AuthContext'; // Adjust path if needed
+import { useAuth } from '../../contexts/AuthContext'; // Adjust path if needed
 
 const AnalystDashboard = () => {
   const { userRole, isLoading } = useAuth(); // Assuming you have isLoading in AuthContext
