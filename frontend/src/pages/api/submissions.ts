@@ -1,6 +1,6 @@
 // frontend/src/pages/api/submissions.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 interface CreateSubmissionPayload {
   title: string;
@@ -50,7 +50,7 @@ export default async function handler(
       statusCode = error.response?.status || 500;
       const responseData = error.response?.data as ApiErrorResponse | undefined;
       responseMessage = responseData?.message || error.message || responseMessage;
-      errorDetails = responseData?.error || responseData; 
+      errorDetails = responseData?.error || responseData;
     } else if (error instanceof Error) {
       responseMessage = error.message;
     } else {
