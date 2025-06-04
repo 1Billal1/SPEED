@@ -9,9 +9,20 @@ interface FrontendSubmission {
   _id: string;
   title?: string;
   authors?: string[];
-  journal?: string;
+  authorRaw?: string;  
+  bibtexEntryType?: string;
   year?: number;
+  journal?: string;
+  booktitle?: string;
+  publisher?: string;
   doi?: string;
+  url?: string;
+  volume?: string;
+  number?: string; 
+  pages?: string;
+  abstract?: string;
+  rawBibtex?: string; 
+
   status: string;
   rejectionReason?: string;
   createdAt?: string;
