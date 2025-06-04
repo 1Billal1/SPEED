@@ -1,0 +1,133 @@
+.dashboardContainer {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  .pageTitle {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .loadingText,
+  .noItemsText {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+  }
+  
+  .errorText {
+    color: red;
+    border: 1px solid red;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .errorTextSmall {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+  
+  .successText {
+    color: green;
+    border: 1px solid green;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .submissionItem {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  
+  .itemTitle {
+    margin-top: 0;
+  }
+  
+  .actionButton {
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .actionButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .backButton {
+    background-color: #6c757d;
+    margin-bottom: 15px;
+  }
+  
+  .backButton:hover {
+    background-color: #545b62;
+  }
+  
+  .analysisFormContainer {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .bibliographicDetails {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+  }
+  
+  .bibliographicDetails p {
+    margin: 5px 0;
+  }
+  
+  .evidenceForm .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .evidenceForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .evidenceForm input[type="text"],
+  .evidenceForm select,
+  .evidenceForm textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  .evidenceForm textarea {
+    min-height: 80px;
+  }
+  
+  .saveButton {
+    background-color: #28a745;
+    margin-top: 10px;
+  }
+  
+  .saveButton:hover {
+    background-color: #1e7e34;
+  }
+  
+  .paginationContainer {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .paginationButton {
+    margin: 0 5px;
+    padding: 8px 12px;
+  }

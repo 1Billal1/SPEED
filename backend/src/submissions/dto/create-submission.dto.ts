@@ -1,25 +1,74 @@
-// create-submission.dto.ts
-import { IsArray, IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+// backend/src/submissions/dto/create-submission.dto.ts
+import { 
+  IsString, 
+  IsArray, 
+  IsOptional, 
+  IsNumber, 
+  ArrayMinSize, 
+  IsNotEmpty, 
+  IsUrl 
+} from 'class-validator';
 
 export class CreateSubmissionDto {
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   title: string;
 
-  @IsNotEmpty()
   @IsArray()
+  @ArrayMinSize(1)
   @IsString({ each: true })
-  authors: string[]; 
+  authors: string[];
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
+  bibtexEntryType: string;
+
+  @IsNumber()
+  @IsOptional() 
+  year?: number;
+
+  @IsString()
+  @IsNotEmpty() 
   journal: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  year: number;
-
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   doi: string;
+
+  @IsOptional()
+  @IsString()
+  booktitle?: string;
+
+  @IsOptional()
+  @IsString()
+  publisher?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsUrl()
+  url?: string;
+
+  @IsOptional()
+  @IsString()
+  volume?: string;
+
+  @IsOptional()
+  @IsString()
+  number?: string;
+
+  @IsOptional()
+  @IsString()
+  pages?: string;
+
+  @IsOptional()
+  @IsString()
+  abstract?: string;
+
+  @IsOptional()
+  @IsString()
+  rawBibtex?: string;
+
+  @IsOptional()
+  @IsString()
+  authorRaw?: string;
 }
