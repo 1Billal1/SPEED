@@ -21,6 +21,7 @@ export default function Layout({ children }: Props) {
           <ul className="nav-links">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/submit">Submit</Link></li>
+            <li><Link href="/claims">Claims</Link></li>
 
             {!userRole && (
               <>
