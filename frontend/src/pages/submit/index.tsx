@@ -1,25 +1,25 @@
 // frontend/src/pages/submit/index.tsx
 import { useState, useRef, ChangeEvent, FormEvent } from 'react';
-import axios, { AxiosError } from 'axios'; // Ensure AxiosError is imported if used for casting
-import styles from './submit.module.css'; // Ensure this path is correct
+import axios, { AxiosError } from 'axios';
+import styles from './submit.module.css'; 
 
-// Define what your /api/parse-bibtex endpoint returns
+
 interface ParsedBibtexData {
   title?: string;
-  authors?: string[]; // This is an array from backend
-  journal?: string;   // Or booktitle, etc.
+  authors?: string[]; 
+  journal?: string; 
   year?: number;
   doi?: string;
   volume?: string;
-  number?: string;    // Issue number
+  number?: string;  
   pages?: string;
   publisher?: string;
-  bibtexEntryType?: string; // Important for backend
-  rawBibtex?: string;       // Important for backend
-  authorRaw?: string;       // Important for backend
+  bibtexEntryType?: string; 
+  rawBibtex?: string;     
+  authorRaw?: string;  
 }
 
-// Define a common error structure from your APIs
+
 interface ApiErrorResponse {
   message: string;
   details?: unknown;
@@ -28,15 +28,14 @@ interface ApiErrorResponse {
 export default function SubmitPage() {
   const [formData, setFormData] = useState({
     title: '',
-    authors: '', // Keep as string for form input, convert to array on submit
-    journal: '', // This field can serve for journal or booktitle depending on context
+    authors: '', 
+    journal: '', 
     year: '',
     doi: '',
     volume: '',
-    number: '', // For issue number
+    number: '',
     pages: '',
     publisher: '',
-    // Fields that will be populated by bibtex parser but not directly editable in this simplified form
     bibtexEntryType: '', 
     rawBibtex: '',
     authorRaw: '',
@@ -61,7 +60,7 @@ export default function SubmitPage() {
           throw new Error('File read error: content is not a string.');
         }
 
-        // Call your Next.js API route for parsing
+        // Call Next.js API route for parsing
         const response = await fetch('/api/parse-bibtex', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -109,19 +108,17 @@ export default function SubmitPage() {
     try {
       const payload = {
         title: formData.title,
-        authors: formData.authors.split(',').map(a => a.trim()).filter(a => a), // Ensure no empty strings
-        journal: formData.journal, // This can be journal or booktitle
-        year: Number(formData.year), // Convert to number
+        authors: formData.authors.split(',').map(a => a.trim()).filter(a => a),
+        journal: formData.journal,
+        year: Number(formData.year),
         doi: formData.doi,
-        volume: formData.volume || undefined, // Send undefined if empty
+        volume: formData.volume || undefined,
         number: formData.number || undefined,
         pages: formData.pages || undefined,
         publisher: formData.publisher || undefined,
-        // These should come from the bibtex parse or be determined by backend if not directly from form
-        bibtexEntryType: formData.bibtexEntryType || 'MISC', // Default if not parsed
+        bibtexEntryType: formData.bibtexEntryType || 'MISC', 
         rawBibtex: formData.rawBibtex || undefined,
         authorRaw: formData.authorRaw || formData.authors,
-        // Add abstract if you have an input for it: abstract: formData.abstract || undefined,
       };
 
       if (!payload.title || payload.authors.length === 0 || !payload.journal || !payload.year || !payload.doi) {
@@ -131,7 +128,7 @@ export default function SubmitPage() {
       }
 
 
-      // POST to your Next.js API route that proxies to the backend submission creation
+      // POST to Next.js API route that proxies to the backend submission creation
       await axios.post('/api/submissions', payload);
 
       setSuccessMessage('Article submitted successfully!');
@@ -140,12 +137,12 @@ export default function SubmitPage() {
           volume: '', number: '', pages: '', publisher: '',
           bibtexEntryType: '', rawBibtex: '', authorRaw: ''
       });
-      if (fileInputRef.current) fileInputRef.current.value = ''; // Reset file input
+      if (fileInputRef.current) fileInputRef.current.value = ''; 
 
     } catch (error: unknown) {
       let msg = 'Submission failed. Please check all fields and try again.';
       if (axios.isAxiosError(error)) {
-        const serverError = error as AxiosError<ApiErrorResponse>; // Use your defined ApiErrorResponse
+        const serverError = error as AxiosError<ApiErrorResponse>;
         msg = serverError.response?.data?.message || serverError.message || msg;
       } else if (error instanceof Error) {
         msg = error.message;
