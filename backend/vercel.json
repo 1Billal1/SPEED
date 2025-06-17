@@ -3,19 +3,16 @@
     "builds": [
       {
         "src": "package.json",
-        "use": "@vercel/static-build",
+        "use": "@vercel/node",
         "config": {
-          "distDir": "dist",
-          "buildCommand": "npm ci && npm run build"
+          "entrypoint": "dist/main.js",
+          "includeFiles": [
+            "dist/**"
+          ]
         }
-      },
-      {
-        "src": "dist/main.js",
-        "use": "@vercel/node"
       }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "dist/main.js" }
+      { "src": "/(.*)", "dest": "/" }
     ]
   }
-  
