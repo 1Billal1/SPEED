@@ -1,8 +1,30 @@
 {
   "version": 2,
   "builds": [
-    { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist", "buildCommand": "npm ci && npm run build" }},
-    { "src": "dist/main.js", "use": "@vercel/node", "config": {"helpers": false, "shouldAddHelpers": false }}
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist", 
+        "buildCommand": "npm ci && npm run build"
+      }
+    },
+    {
+      "src": "dist/main.js",
+      "use": "@vercel/node",
+      "config": {
+        "helpers": false,
+        "shouldAddHelpers": false,
+        "includeFiles": [
+          "dist/**"
+        ]
+      }
+    }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "dist/main.js" }]
+  "routes": [
+    { 
+      "src": "/(.*)", 
+      "dest": "dist/main.js"
+    }
+  ]
 }
