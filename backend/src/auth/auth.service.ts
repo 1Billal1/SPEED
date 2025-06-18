@@ -25,8 +25,11 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new this.userModel({ email, password: hashedPassword, role: 'submitter' });
+    const newUser = new this.userModel({
+      email,
+      password: hashedPassword,
+      role: 'submitter',
+    });
     return newUser.save();
   }
-
 }

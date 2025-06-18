@@ -8,9 +8,15 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, FilterQuery } from 'mongoose';
 import * as stringSimilarity from 'string-similarity';
-import { EvidenceEntry, EvidenceEntryDocument } from './schemas/evidence-entry.schema';
+import {
+  EvidenceEntry,
+  EvidenceEntryDocument,
+} from './schemas/evidence-entry.schema';
 import { CreateEvidenceEntryDto } from './dto/create-evidence-entry.dto';
-import { Submission, SubmissionDocument } from '../submissions/schemas/submission.schema';
+import {
+  Submission,
+  SubmissionDocument,
+} from '../submissions/schemas/submission.schema';
 
 export interface SearchEvidenceParams {
   sePractice?: string;
@@ -70,10 +76,14 @@ export class EvidenceEntriesService {
       throw new BadRequestException('Invalid or missing analystId.');
     }
 
-    const submissionObjectId = new Types.ObjectId(createEvidenceEntryDto.submissionId);
+    const submissionObjectId = new Types.ObjectId(
+      createEvidenceEntryDto.submissionId,
+    );
     const analystObjectId = new Types.ObjectId(analystId);
 
-    const submission = await this.submissionModel.findById(submissionObjectId).exec();
+    const submission = await this.submissionModel
+      .findById(submissionObjectId)
+      .exec();
 
     if (!submission) {
       throw new NotFoundException(
@@ -108,7 +118,9 @@ export class EvidenceEntriesService {
     return newEvidenceEntry.save();
   }
 
-  async findAllForSubmission(submissionId: string): Promise<EvidenceEntryDocument[]> {
+  async findAllForSubmission(
+    submissionId: string,
+  ): Promise<EvidenceEntryDocument[]> {
     if (!Types.ObjectId.isValid(submissionId)) return [];
     return this.evidenceEntryModel
       .find({ submissionId: new Types.ObjectId(submissionId) })
@@ -120,7 +132,9 @@ export class EvidenceEntriesService {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  async searchEvidence(params: SearchEvidenceParams): Promise<SearchEvidenceResult> {
+  async searchEvidence(
+    params: SearchEvidenceParams,
+  ): Promise<SearchEvidenceResult> {
     const { sePractice, keywords, page = 1, limit = 10 } = params;
     const skip = (page - 1) * limit;
 
@@ -129,7 +143,9 @@ export class EvidenceEntriesService {
 
     if (sePractice?.trim()) {
       conditions.push({
-        sePractice: { $regex: new RegExp(`^${this.escapeRegex(sePractice.trim())}$`, 'i') },
+        sePractice: {
+          $regex: new RegExp(`^${this.escapeRegex(sePractice.trim())}$`, 'i'),
+        },
       });
     }
 
@@ -152,7 +168,9 @@ export class EvidenceEntriesService {
       ];
 
       if (matchingSubmissionIds.length > 0) {
-        keywordOrConditions.push({ submissionId: { $in: matchingSubmissionIds } });
+        keywordOrConditions.push({
+          submissionId: { $in: matchingSubmissionIds },
+        });
       }
 
       conditions.push({ $or: keywordOrConditions });
@@ -189,15 +207,25 @@ export class EvidenceEntriesService {
     const evidenceResults = evidenceEntries.map((entry) => {
       const plainEntry = entry.toObject() as any;
 
-      if (plainEntry.submissionId && typeof plainEntry.submissionId === 'object') {
-        plainEntry.submissionId._id = (plainEntry.submissionId._id as Types.ObjectId).toString();
+      if (
+        plainEntry.submissionId &&
+        typeof plainEntry.submissionId === 'object'
+      ) {
+        plainEntry.submissionId._id = (
+          plainEntry.submissionId._id as Types.ObjectId
+        ).toString();
       } else if (plainEntry.submissionId) {
-        plainEntry.submissionId = (plainEntry.submissionId as Types.ObjectId).toString();
+        plainEntry.submissionId = (
+          plainEntry.submissionId as Types.ObjectId
+        ).toString();
       }
 
       plainEntry._id = (plainEntry._id as Types.ObjectId).toString();
 
-      return plainEntry as Omit<EvidenceEntryDocument, 'submissionId' | '_id'> & {
+      return plainEntry as Omit<
+        EvidenceEntryDocument,
+        'submissionId' | '_id'
+      > & {
         _id: string;
         submissionId?: PopulatedSubmissionForSearch | string;
       };
@@ -224,7 +252,10 @@ export class EvidenceEntriesService {
     if (!submissionToUpdate)
       throw new NotFoundException(`Submission with ID "${id}" not found`);
 
-    if (submissionToUpdate.status !== 'pending' && submissionToUpdate.status === newStatus)
+    if (
+      submissionToUpdate.status !== 'pending' &&
+      submissionToUpdate.status === newStatus
+    )
       return submissionToUpdate;
 
     const updatePayload: any = {
@@ -238,7 +269,9 @@ export class EvidenceEntriesService {
 
     if (newStatus === 'Rejected') {
       if (!rejectionReason)
-        throw new BadRequestException('Rejection reason is required when rejecting.');
+        throw new BadRequestException(
+          'Rejection reason is required when rejecting.',
+        );
       updatePayload.rejectionReason = rejectionReason;
 
       if (

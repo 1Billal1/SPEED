@@ -1,6 +1,17 @@
 // backend/src/evidence-entries/dto/create-evidence-entry.dto.ts
-import { IsString, IsNotEmpty, IsEnum, IsOptional, MaxLength, IsMongoId } from 'class-validator';
-import { EvidenceResult, ResearchType, ParticipantType } from '../schemas/evidence-entry.schema';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+  MaxLength,
+  IsMongoId,
+} from 'class-validator';
+import {
+  EvidenceResult,
+  ResearchType,
+  ParticipantType,
+} from '../schemas/evidence-entry.schema';
 
 export class CreateEvidenceEntryDto {
   @IsMongoId()
@@ -17,7 +28,7 @@ export class CreateEvidenceEntryDto {
 
   @IsEnum(EvidenceResult)
   @IsNotEmpty()
-  resultOfEvidence: EvidenceResult; 
+  resultOfEvidence: EvidenceResult;
 
   @IsOptional()
   @IsEnum(ResearchType)
@@ -25,19 +36,19 @@ export class CreateEvidenceEntryDto {
 
   @IsOptional()
   @IsEnum(ParticipantType)
-  typeOfParticipants?: ParticipantType; 
-  
+  typeOfParticipants?: ParticipantType;
+
   @IsOptional()
   @IsString()
   strengthOfEvidence?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(2000) 
+  @MaxLength(2000)
   analystNotes?: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(10000)
-  extractedText?: string; 
+  extractedText?: string;
 }

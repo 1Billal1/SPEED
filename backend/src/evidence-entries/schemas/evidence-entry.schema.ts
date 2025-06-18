@@ -25,14 +25,19 @@ export enum ParticipantType {
 
 @Schema({ timestamps: true })
 export class EvidenceEntry extends Document {
-  @Prop({ type: Types.ObjectId, ref: 'Submission', required: true, index: true })
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Submission',
+    required: true,
+    index: true,
+  })
   submissionId: Types.ObjectId;
 
   @Prop({ required: true })
-  sePractice: string; 
+  sePractice: string;
 
   @Prop({ required: true })
-  claim: string; 
+  claim: string;
 
   @Prop({ type: String, enum: EvidenceResult, required: true })
   resultOfEvidence: EvidenceResult;
@@ -42,8 +47,8 @@ export class EvidenceEntry extends Document {
 
   @Prop({ type: String, enum: ParticipantType })
   typeOfParticipants?: ParticipantType;
-  
-  @Prop() 
+
+  @Prop()
   strengthOfEvidence?: string;
 
   @Prop({ type: String, maxlength: 2000 })
@@ -56,4 +61,8 @@ export class EvidenceEntry extends Document {
 export type EvidenceEntryDocument = EvidenceEntry & Document;
 export const EvidenceEntrySchema = SchemaFactory.createForClass(EvidenceEntry);
 
-EvidenceEntrySchema.index({ sePractice: 'text', claim: 'text', analystNotes: 'text' });
+EvidenceEntrySchema.index({
+  sePractice: 'text',
+  claim: 'text',
+  analystNotes: 'text',
+});

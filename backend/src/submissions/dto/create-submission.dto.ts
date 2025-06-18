@@ -1,12 +1,12 @@
 // backend/src/submissions/dto/create-submission.dto.ts
-import { 
-  IsString, 
-  IsArray, 
-  IsOptional, 
-  IsNumber, 
-  ArrayMinSize, 
-  IsNotEmpty, 
-  IsUrl 
+import {
+  IsString,
+  IsArray,
+  IsOptional,
+  IsNumber,
+  ArrayMinSize,
+  IsNotEmpty,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateSubmissionDto {
@@ -24,11 +24,11 @@ export class CreateSubmissionDto {
   bibtexEntryType: string;
 
   @IsNumber()
-  @IsOptional() 
+  @IsOptional()
   year?: number;
 
   @IsString()
-  @IsNotEmpty() 
+  @IsNotEmpty()
   journal: string;
 
   @IsString()

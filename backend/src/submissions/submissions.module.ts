@@ -7,7 +7,7 @@ import { Submission, SubmissionSchema } from './schemas/submission.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: Submission.name, schema: SubmissionSchema }
+      { name: Submission.name, schema: SubmissionSchema },
     ]),
   ],
   controllers: [SubmissionsController],

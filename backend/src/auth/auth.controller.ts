@@ -1,5 +1,11 @@
 // src/auth/auth.controller.ts
-import { Controller, Post, Body, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -24,5 +30,4 @@ export class AuthController {
     }
     return this.authService.signup(body.email, body.password);
   }
-  
 }
