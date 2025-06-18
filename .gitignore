@@ -31,3 +31,4 @@ coverage/
 
 # Optional (for Docker users)
 docker-compose.override.yml
+.vercel
